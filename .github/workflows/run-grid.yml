@@ -1,40 +1,10 @@
-name: Run Drone Grid Generator
-on:
-  workflow_dispatch: {}   # run it manually from the Actions tab
-  # Optional: daily schedule (09:23 PT). Remove this block if you don't want auto-runs.
-  schedule:
-    - cron: "23 17 * * *"
-
-jobs:
-  run-grid:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write     # needed so the workflow can commit files
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Generate 1 km grid (Seattle example)
+- name: Generate 1 km grid (Seattle to Snoqualmie example)
         run: |
           mkdir -p output
+          ts=$(date +'%Y%m%d_%H%M%S')
+          out_file="output/grid_${ts}.geojson"
           python grid_generator.py \
-            --north 47.70 --south 47.50 --west -122.40 --east -122.20 \
-            --cell 1000 --out output/grid_1km.geojson
+            --north 48.0 --south 47.0 --west -122.0 --east -121.0 \
+            --cell 1000 --out "$out_file"
+          echo "Generated $out_file"
           ls -lh output
-
-      - name: Commit results
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto: generated grid output"
-          file_pattern: output/grid_1km.geojson
