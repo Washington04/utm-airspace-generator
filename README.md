@@ -1,5 +1,5 @@
-# utm-airspace-generator
-A UTM simulator that will define a geographical area (Seattle Metro), generate operational intents, then deconflict those intents. This project should comply with as may governing regulations as possible, ie ASTM F3548, PART108, AC146-1, U-space guidance, etc. This project should mimic an ADSP / UAS Service Supplier. 
+# utm-orchestrator
+Intended to be a fully functional UTM sandbox that will define a geographical area (Seattle Metro), generate operational intents and constraints, then deconflict those intents using industry consensus prioritization. This project should comply with as may governing regulations as possible, ie ASTM F3548, PART108, AC146-1, U-space guidance, etc. This project should mimic an ADSP / UAS Service Supplier. 
 
 Goals: 
 - establish Seattle Metro area of responsibility
