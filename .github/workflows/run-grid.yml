@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate 1 km grid (Seattle to Snoqualmie example)
+      - name: Generate 100m grid (Seattle to Snoqualmie example)
         run: |
           mkdir -p output
           ts=$(date +'%Y%m%d_%H%M%S')
