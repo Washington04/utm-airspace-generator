@@ -1,5 +1,11 @@
-python grid_generator.py \
-  --boundary data/seattle_boundary.geojson \
-  --cell 100 \
-  --out "$out_file"
-
+- name: Generate grid clipped to Seattle boundary
+        run: |
+          mkdir -p output
+          ts=$(date +'%Y%m%d_%H%M%S')
+          out_file="output/grid_${ts}.geojson"
+          python grid_generator.py \
+            --boundary data/seattle_boundary.geojson \
+            --cell 500 \
+            --out "$out_file"
+          echo "Generated $out_file"
+          ls -lh output
