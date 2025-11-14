@@ -16,13 +16,14 @@ Drone Flight Grid Generator (Boundary-only version)
 Example:
     python grid_generator.py \
         --boundary data/seattle_boundary.geojson \
-        --cell 100 \
-        --out output/grid_seattle_100m.geojson
+        --cell 500 \
+        --out output/grid_seattle_500m.geojson
 """
 
 import argparse
 import math
-import os
+from datetime import datetime
+import os  # you already have this, so skip if it’s there
 import logging
 
 import geopandas as gpd
@@ -153,7 +154,15 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+    
+    # Ensure output directory exists (based on the base path in --out)
+    base, ext = os.path.splitext(args.out)
+    if not ext:
+        ext = ".geojson"
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out_path = f"{base}_{timestamp}{ext}"
+    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
 
     # Load boundary and compute bounding box
     minx, miny, maxx, maxy, boundary = bounds_from_boundary(args.boundary)
@@ -174,22 +183,23 @@ def main() -> None:
     gdf = gdf.reset_index(drop=True)
     gdf["cell_id"] = gdf.index.map(lambda i: f"SEA_{i:06d}")
 
-   # Add centroids for easier routing and visualization
-   gdf["centroid_lon"] = gdf.geometry.centroid.x
-   gdf["centroid_lat"] = gdf.geometry.centroid.y
+    # Add centroids for easier routing and visualization
+    centroids = gdf.geometry.centroid
+    gdf["centroid_lon"] = gdf.geometry.centroid.x.round(3)
+    gdf["centroid_lat"] = gdf.geometry.centroid.y.round(3)
 
-   # add sorting 
-   gdf = gdf.sort_values("cell_id").reset_index(drop=True)
+    # add sorting 
+    gdf = gdf.sort_values("cell_id").reset_index(drop=True)
 
     # Write output
     try:
-        gdf.to_file(args.out, driver="GeoJSON")
+        gdf.to_file(out_path, driver="GeoJSON")
     except Exception:
         log.warning("GeoJSON driver failed; falling back to writing raw GeoJSON text.")
-        with open(args.out, "w", encoding="utf-8") as f:
+        with open(out_path, "w", encoding="utf-8") as f:
             f.write(gdf.to_json())
 
-    log.info("Finished. Wrote %s cells to %s", len(gdf), args.out)
+    log.info("Finished. Wrote %d cells to %s", len(gdf), out_path)
 
 
 if __name__ == "__main__":
