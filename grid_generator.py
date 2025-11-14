@@ -155,10 +155,10 @@ def main() -> None:
     args = parse_args()
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
 
-    # 1) Load boundary and compute bounding box
+    # Load boundary and compute bounding box
     minx, miny, maxx, maxy, boundary = bounds_from_boundary(args.boundary)
 
-    # 2) Build rectangular grid over that bounding box
+    # Build rectangular grid over that bounding box
     gdf = build_grid_from_bounds(
         north=maxy,
         south=miny,
@@ -167,10 +167,21 @@ def main() -> None:
         cell_m=args.cell,
     )
 
-    # 3) Clip grid to the boundary
+    # Clip grid to the boundary
     gdf = clip_to_boundary(gdf, boundary)
 
-    # 4) Write output
+    # Add unique IDs to each grid cell
+    gdf = gdf.reset_index(drop=True)
+    gdf["cell_id"] = gdf.index.map(lambda i: f"SEA_{i:06d}")
+
+   # Add centroids for easier routing and visualization
+   gdf["centroid_lon"] = gdf.geometry.centroid.x
+   gdf["centroid_lat"] = gdf.geometry.centroid.y
+
+   # add sorting 
+   gdf = gdf.sort_values("cell_id").reset_index(drop=True)
+
+    # Write output
     try:
         gdf.to_file(args.out, driver="GeoJSON")
     except Exception:
