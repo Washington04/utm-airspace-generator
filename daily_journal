@@ -5,3 +5,8 @@ Day 2: added license. tried to reduce grid cell size to 100m make it more realis
 but this 100x'd the number of cells so I in order to reduce the overall area size I imported a geoJSON of 
 Seattle city limits from https://data-seattlecitygis.opendata.arcgis.com/ and modified grid cell size to 500m 
 for mvp. Worked great after some debugging. 
+
+Day 3: Configured local dev environment in vs code and Github desktop. Added unique cell ids. Rounded cell centroids to 
+nearest thousandth place. Timestamped local env outputs. 
+
+Day 4: 
