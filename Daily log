@@ -10,3 +10,9 @@ Day 3: Configured local dev environment in vs code and Github desktop. Added uni
 nearest thousandth place. Timestamped local env outputs. 
 
 Day 4: 
+
+N7 Roadmap:
+- create points of interest (restaraunts, delivery locations, charging centers)
+- flight generator
+- import FAA constraints and obstacle data
+- reduce cell size and consider converting to hex grid
