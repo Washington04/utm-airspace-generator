@@ -2,10 +2,9 @@
 
 _A lightweight, standards-aligned UAS Traffic Management (UTM) simulation environment_
 
-**Note**: UTM Orchestrator is a hands-on learning project for exploring UTM technical challenges, geospatial approaches, and airspace interoperability. Contributions, suggestions, and discussions are welcome, please add any to UTM-orchestrator/community_notes. 
+Note: UTM Orchestrator is a learning project to exploring UTM technical challenges, geospatial approaches, and airspace interoperability. Contributions, suggestions, and discussions are welcome, please add any to UTM-orchestrator/community_notes. 
 
-
----
+***
 
 **Overview**
 
@@ -22,7 +21,7 @@ The goal is to provide a safe environment to explore how UTM services, implement
 
 This project is not intended to be an operational USS, but rather a research and learning tool that mirrors the structure of basic UTM systems.
 
----
+***
 
 **Objectives**
 
@@ -32,7 +31,7 @@ This project is not intended to be an operational USS, but rather a research and
 - Provide a platform for evaluating shared airspace concepts inspired by the US UTM Implementation
 - Allow users to visualize routes, grids, and constraints directly within the workflow
 
----
+***
 
 **Standards & Guidance Referenced**
 
@@ -43,7 +42,7 @@ UTM Orchestrator is designed with reference to the FAA, ASTM, and international 
 - U-Space regulatory guidance (EU)
 - Shared Airspace / Strategic Coordination concepts from the US UTM Implementation
 
----
+***
 
 **Current Capabilities**
 
@@ -67,7 +66,7 @@ UTM Orchestrator is designed with reference to the FAA, ASTM, and international 
 - Layered visualization using GeoJSON standards
 - Supports grid + POI overlays for operational alignment
 
----
+***
 
 **In Development (Roadmap)**
 
@@ -90,7 +89,7 @@ UTM Orchestrator is designed with reference to the FAA, ASTM, and international 
   - Temporary flight restrictions
   - Weather constraints
 
----
+***
 
 **Long-Term** 
 - UTM Orchestrator aims to serve as a sandbox environment for:
