@@ -90,12 +90,12 @@ UTM Orchestrator is designed with reference to the FAA, ASTM, and international 
 ---
 
 **Long-Term** 
-UTM Orchestrator aims to serve as a sandbox environment for:
-- Simulation studies
-- Strategic coordination testing
-- Rapid prototyping of UTM concepts
+- UTM Orchestrator aims to serve as a sandbox environment for:
+  - Simulation studies
+  - Strategic coordination testing
+  - Rapid prototyping of UTM concepts
 
-The goal is to provide a simplified environment mirroring the ecosystem emerging from UTM Shared Airspace Implementation and ASTM interoperability standards.
+Goal is to provide a simplified environment mirroring the ecosystem emerging from UTM Shared Airspace Implementation and ASTM interoperability standards.
 
 ---
 
