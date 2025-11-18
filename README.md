@@ -15,32 +15,30 @@ The system generates:
 - POIs and route generation
 - Basic strategic deconfliction workflows
 
-The goal is to provide a modular environment to explore how UTM services—implemented in accordance with industry consensus standards—enable safe, scalable, and transparent shared airspace operations.
+The goal is to provide a safe environment to explore how UTM services, implemented in accordance with industry consensus standards, enable safe, scalable, and transparent shared airspace operations.
 
-This project is not intended to be an FAA-operational USS, but rather a research and prototyping tool that mirrors the structure of modern UTM systems.
+This project is not intended to be an operational USS, but rather a research and learning tool that mirrors the structure of basic UTM systems.
 
 ---
 
 **Objectives**
 
-- Model realistic BVLOS delivery operations in dense urban airspace
+- Model BVLOS delivery operations in dense urban airspace
 - Implement the foundational elements of a UAS Service Supplier (USS) / Airspace Data Service Provider (ADSP)
 - Support simulation of strategic conflict detection, intent sharing, and inter-USS coordination
-- Provide a platform for experimenting with shared airspace concepts inspired by the US UTM Implementation
-- Allow operators and developers to visualize routes, grids, and constraints directly within the workflow
+- Provide a platform for evaluating shared airspace concepts inspired by the US UTM Implementation
+- Allow users to visualize routes, grids, and constraints directly within the workflow
 
 ---
 
 **Standards & Guidance Referenced**
 
-UTM Orchestrator is designed with reference to the FAA, ASTM, and international guidance that shapes modern UTM systems:
+UTM Orchestrator is designed with reference to the FAA, ASTM, and international guidance that shapes basic UTM systems:
 - ASTM F3548-21 – USS Interoperability
 - 14 CFR Part 108 – UAS Operating Rules (proposed)
 - 14 CFR Part 146 & AC 146-1 – Airspace Data Service Providers (proposed)
 - U-Space regulatory guidance (EU)
 - Shared Airspace / Strategic Coordination concepts from the US UTM Implementation
-
-This project aims for conceptual alignment—not strict certification compliance.
 
 ---
 
@@ -64,7 +62,7 @@ This project aims for conceptual alignment—not strict certification compliance
 **Visualization Support**
 - Native preview inside VS Code
 - Layered visualization using GeoJSON standards
-- Supports grid + POI overlays for operational understanding
+- Supports grid + POI overlays for operational alignment
 
 ---
 
@@ -77,7 +75,6 @@ This project aims for conceptual alignment—not strict certification compliance
 - Output per-flight operational intent objects
 
 **Strategic Coordination Simulation**
-- Intent sharing across simulated USS nodes
 - Identify conflicts using:
   - Spatial overlap
   - Time windows
@@ -90,33 +87,19 @@ This project aims for conceptual alignment—not strict certification compliance
   - Temporary flight restrictions
   - Weather constraints
 
-**Operator-Level Behavior**
-- Multi-flight timelines
-- Operational profiles
-- Conformance monitoring simulation
-
 ---
 
-**Long-Term Vision** 
+**Long-Term** 
 UTM Orchestrator aims to serve as a sandbox environment for:
-- UTM researchers
-- Operator simulation studies
+- Simulation studies
 - Strategic coordination testing
-- Education & demonstration
 - Rapid prototyping of UTM concepts
 
-The goal is to provide a simplified but realistic environment mirroring the ecosystem emerging from:
-- The US UTM Shared Airspace Implementation
-- InterUSS Platform concepts
-- AAMTEX and MAAP research
-- ASTM interoperability standards
+The goal is to provide a simplified environment mirroring the ecosystem emerging from UTM Shared Airspace Implementation and ASTM interoperability standards.
 
 ---
 
-**Status** 
-Active development
-Designed for experimentation, not operational deployment
-
+_I'd love your feedback. Please provide comments, suggestions, or questions in UTM-orchestrator/community_notes._
 
 
 
