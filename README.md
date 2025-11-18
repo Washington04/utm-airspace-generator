@@ -1,7 +1,7 @@
 **UTM Orchestrator**
 _A lightweight, standards-aligned UAS Traffic Management (UTM) simulation environment_
 
-**I'd love your feedback and recommendations! Please add them in UTM-orchestrator/community_notes**
+I welcome feedback and recommendations. Please share in UTM-orchestrator/community_notes. 
 
 ---
 
