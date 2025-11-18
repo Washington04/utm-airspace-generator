@@ -2,6 +2,9 @@
 
 _A lightweight, standards-aligned UAS Traffic Management (UTM) simulation environment_
 
+**Note**: UTM Orchestrator is a hands-on learning project for exploring UTM technical challenges, geospatial approaches, and airspace interoperability. Contributions, suggestions, and discussions are welcome, please add any to UTM-orchestrator/community_notes. 
+
+
 ---
 
 **Overview**
@@ -96,11 +99,6 @@ UTM Orchestrator is designed with reference to the FAA, ASTM, and international 
   - Rapid prototyping of UTM concepts
 
 Goal is to provide a simplified environment mirroring the ecosystem emerging from UTM Shared Airspace Implementation and ASTM interoperability standards.
-
----
-
-_I'd love your feedback. Please provide comments, suggestions, or questions in UTM-orchestrator/community_notes._
-
 
 
 
