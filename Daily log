@@ -13,7 +13,6 @@ D4: Created poi.csv and poi.geojson. Points of interest include 1 hub, 10 mercha
 Intalled Geo Data Viewer for visualization in vs code. 
 
 N7 Roadmap:
-- create points of interest (restaraunts, delivery locations, charging centers)
 - flight generator
 - import FAA constraints and obstacle data
 - reduce cell size and consider converting to hex grid
