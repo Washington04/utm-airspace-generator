@@ -18,6 +18,8 @@ import glob
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
+import geopandas as gpd
+
 
 import folium
 
@@ -29,6 +31,7 @@ ROOT_DIR = SRC_DIR.parent
 
 OUTPUT_DIR = ROOT_DIR / "output"
 DATA_DIR = ROOT_DIR / "data"
+OBSTACLE_FILE = DATA_DIR / "obstacles" / "faa_dof_seattle.geojson"
 CITY_LIMITS_FILE = DATA_DIR / "seattle_city_limits.geojson"
 
 
@@ -112,15 +115,42 @@ def add_flight_routes_layer(m: folium.Map, flights: Dict) -> None:
         ).add_to(m)
 
 
+def add_obstacles_layer(m: folium.Map) -> None:
+    if not OBSTACLE_FILE.exists():
+        return
+
+    gdf = gpd.read_file(OBSTACLE_FILE)
+
+    # Option 1: simple points as small markers
+    for _, row in gdf.iterrows():
+        lat = row["lat"]
+        lon = row["lon"]
+        agl = row.get("agl_ft", None)
+        obs_type = row.get("obstacle_type", "")
+
+        tooltip = f"{obs_type} ({agl} ft AGL)" if agl is not None else obs_type
+
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=4,
+            opacity=0.7,
+            fill=True,
+            fill_opacity=0.7,
+            tooltip=tooltip,
+        ).add_to(m)
+
+
 def build_map(flights: Dict) -> folium.Map:
     center = compute_map_center(flights)
     m = folium.Map(location=center, zoom_start=12)
 
     add_city_limits_layer(m)
+    add_obstacles_layer(m)       
     add_flight_routes_layer(m, flights)
 
     folium.LayerControl().add_to(m)
     return m
+
 
 
 def save_map(m: folium.Map) -> Path:
