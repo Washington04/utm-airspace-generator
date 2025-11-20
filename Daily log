@@ -12,7 +12,10 @@ nearest thousandth place. Timestamped local env outputs.
 D4: Created poi.csv and poi.geojson. Points of interest include 1 hub, 10 merchants, 10 customers. 
 Intalled Geo Data Viewer for visualization in vs code. 
 
+D5: Built flight generator and flight generator html visualization via Folium. Operational intent is vector based only. 
+for now. Straight flight paths from hub-merchant-customer, then return to hub. 
+
 N7 Roadmap:
-- flight generator
-- import FAA constraints and obstacle data
-- reduce cell size and consider converting to hex grid
+- import FAA constraints and obstacle data. For example, default flight altitude is 250ft MSL despite 
+downtown obstacles at 1100ft. 
+- Consider converting to hex grid and reducing cell size to better enable deconfliction. 
