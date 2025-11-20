@@ -125,7 +125,7 @@ def generate_operational_intents(
     pois: Dict[str, List[POI]],
     count: int,
     cruise_altitude_ft: int = 250,
-    speed_mps: float = 15.0,
+    speed_mps: float = 25.0,
     route_strategy: str = "straight_line",
 ) -> List[Dict]:
     merchants = pois["merchants"]
