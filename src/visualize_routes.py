@@ -33,6 +33,8 @@ OUTPUT_DIR = ROOT_DIR / "output"
 DATA_DIR = ROOT_DIR / "data"
 OBSTACLE_FILE = DATA_DIR / "obstacles" / "faa_dof_seattle.geojson"
 CITY_LIMITS_FILE = DATA_DIR / "seattle_city_limits.geojson"
+GRID_LATEST = OUTPUT_DIR / "output_latest.geojson"
+
 
 
 def find_latest_flights_file() -> Optional[Path]:
@@ -41,6 +43,19 @@ def find_latest_flights_file() -> Optional[Path]:
     if not matches:
         return None
     # Sort by filename (timestamp in name) and take latest
+    matches.sort()
+    return Path(matches[-1])
+
+
+def find_latest_grid_file() -> Optional[Path]:
+    """Return output_latest.geojson if present, else latest grid_*.geojson."""
+    if GRID_LATEST.exists():
+        return GRID_LATEST
+
+    pattern = str(OUTPUT_DIR / "grid_*.geojson")
+    matches = glob.glob(pattern)
+    if not matches:
+        return None
     matches.sort()
     return Path(matches[-1])
 
