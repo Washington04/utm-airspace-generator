@@ -14,9 +14,12 @@ import os
 import random
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
-
+import geopandas as gpd
+from shapely.geometry import LineString
+from pathlib import Path
 
 POI_FILE = "data/points_of_interest.csv"
+OBSTACLE_FILE = Path("data/obstacles/faa_dof_seattle.geojson")
 DEFAULT_OUTPUT_DIR = "output"
 
 
@@ -46,6 +49,50 @@ class POI:
             "centroid_lat": self.centroid_lat,
             "centroid_lon": self.centroid_lon,
         }
+
+def segment_conflicting_obstacles(
+    lat1: float,
+    lon1: float,
+    lat2: float,
+    lon2: float,
+    obstacles: gpd.GeoDataFrame,
+) -> List[str]:
+    """
+    Returns a list of OAS IDs for obstacles whose buffered polygon
+    intersects the segment from (lat1, lon1) to (lat2, lon2).
+    """
+    if obstacles.empty:
+        return []
+
+    # Shapely uses (lon, lat) order
+    line = LineString([(lon1, lat1), (lon2, lat2)])
+
+    # Intersect test over all buffered polygons
+    mask = obstacles.intersects(line)
+    if not mask.any():
+        return []
+
+    # Prefer FAA's 'oas' ID if present
+    if "oas" in obstacles.columns:
+        return obstacles.loc[mask, "oas"].astype(str).tolist()
+
+    # Fallback to index if 'oas' missing for some reason
+    return [str(i) for i in obstacles.index[mask]]
+
+
+def load_obstacle_buffers() -> gpd.GeoDataFrame:
+    """Load buffered obstacles created by obstacle_preprocess.py."""
+    if not OBSTACLE_FILE.exists():
+        print(f"Warning: obstacle file not found: {OBSTACLE_FILE}")
+        return gpd.GeoDataFrame()  # empty fallback
+
+    obstacles = gpd.read_file(OBSTACLE_FILE)
+
+    # Ensure valid CRS for geometry checks
+    if obstacles.crs is None:
+        obstacles.set_crs(epsg=4326, inplace=True)
+
+    return obstacles
 
 
 def load_pois(path: str = POI_FILE) -> Dict[str, List[POI]]:
@@ -128,6 +175,9 @@ def generate_operational_intents(
     speed_mps: float = 25.0,
     route_strategy: str = "straight_line",
 ) -> List[Dict]:
+    
+    obstacles = load_obstacle_buffers()
+
     merchants = pois["merchants"]
     customers = pois["customers"]
     hubs = pois["hubs"]
@@ -139,6 +189,49 @@ def generate_operational_intents(
         merchant = random.choice(merchants)
         customer = random.choice(customers)
         hub = random.choice(hubs)
+
+        conflict_legs: List[str] = []
+        conflict_obstacles: set[str] = set()
+
+
+        # hub -> merchant
+        ids = segment_conflicting_obstacles(
+            hub.centroid_lat,
+            hub.centroid_lon,
+            merchant.centroid_lat,
+            merchant.centroid_lon,
+            obstacles,
+        )
+        if ids:
+            conflict_legs.append("hub_to_merchant")
+            conflict_obstacles.update(ids)
+
+        # merchant -> customer
+        ids = segment_conflicting_obstacles(
+            merchant.centroid_lat,
+            merchant.centroid_lon,
+            customer.centroid_lat,
+            customer.centroid_lon,
+            obstacles,
+        )
+        if ids:
+            conflict_legs.append("merchant_to_customer")
+            conflict_obstacles.update(ids)
+
+        # customer -> hub
+        ids = segment_conflicting_obstacles(
+            customer.centroid_lat,
+            customer.centroid_lon,
+            hub.centroid_lat,
+            hub.centroid_lon,
+            obstacles,
+        )
+        if ids:
+            conflict_legs.append("customer_to_hub")
+            conflict_obstacles.update(ids)
+
+        has_conflict = bool(conflict_legs)
+    
 
         flight_id = generate_flight_id(i)
         scheduled_departure_utc = generate_departure_time(
@@ -159,7 +252,10 @@ def generate_operational_intents(
             "cruise_altitude_ft": cruise_altitude_ft,
             "speed_mps": speed_mps,
             "route_strategy": route_strategy,
-            "status": "planned",
+            "status": "conflict_obstacle" if has_conflict else "planned",
+            "has_obstacle_conflict": has_conflict,
+            "obstacle_conflict_legs": conflict_legs,
+            "obstacle_conflict_oas": sorted(conflict_obstacles),
             # Optional embedded POI details
             "origin_poi": merchant.to_dict(),
             "destination_poi": customer.to_dict(),
@@ -167,6 +263,10 @@ def generate_operational_intents(
         }
 
         flights.append(intent)
+
+    # --- Summary of conflicts ---
+    conflict_count = sum(1 for f in flights if f.get("has_obstacle_conflict", False))
+    print(f"Detected {conflict_count} obstacle conflicts out of {len(flights)} flights.")
 
     return flights
 
@@ -226,8 +326,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--speed-mps",
         type=float,
-        default=15.0,
-        help="Default airspeed in meters per second (default: 15.0)",
+        default=25.0,
+        help="Default airspeed in meters per second (default: 25.0)",
     )
     parser.add_argument(
         "--route-strategy",

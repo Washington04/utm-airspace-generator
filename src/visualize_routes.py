@@ -112,22 +112,46 @@ def add_flight_routes_layer(m: folium.Map, flights: Dict) -> None:
             # Skip flights with incomplete coordinates
             continue
 
-        # Route: hub -> merchant -> customer -> hub
-        points = [
-            [h_lat, h_lon],
-            [o_lat, o_lon],
-            [d_lat, d_lon],
-            [h_lat, h_lon],
+        tooltip = f.get("flight_id", "flight")
+        conflict_legs = set(f.get("obstacle_conflict_legs", []))
+        conflict_oas = f.get("obstacle_conflict_oas", [])
+
+        # Debug: log which legs & obstacles this flight conflicts with
+        print(
+            f"{tooltip}: legs={sorted(conflict_legs)}, obstacles={conflict_oas}"
+        )
+
+        # Define each leg explicitly
+        legs = [
+            (
+                "hub_to_merchant",
+                [[h_lat, h_lon], [o_lat, o_lon]],
+            ),
+            (
+                "merchant_to_customer",
+                [[o_lat, o_lon], [d_lat, d_lon]],
+            ),
+            (
+                "customer_to_hub",
+                [[d_lat, d_lon], [h_lat, h_lon]],
+            ),
         ]
 
-        tooltip = f.get("flight_id", "flight")
+        for leg_name, leg_points in legs:
+            leg_conflict = leg_name in conflict_legs
 
-        folium.PolyLine(
-            locations=points,
-            weight=2,
-            opacity=0.7,
-            tooltip=tooltip,
-        ).add_to(m)
+            line_color = "red" if leg_conflict else "green"
+            line_weight = 3 if leg_conflict else 2
+            dash = "5,5" if leg_conflict else None
+
+            folium.PolyLine(
+                locations=leg_points,
+                weight=line_weight,
+                opacity=0.8,
+                color=line_color,
+                tooltip=f"{tooltip} ({leg_name})",
+                dash_array=dash,
+            ).add_to(m)
 
 
 def add_obstacles_layer(m: folium.Map) -> None:
@@ -149,7 +173,9 @@ def add_obstacles_layer(m: folium.Map) -> None:
             location=[lat, lon],
             radius=4,
             opacity=0.7,
+            color="yellow",
             fill=True,
+            fill_color="yellow",
             fill_opacity=0.7,
             tooltip=tooltip,
         ).add_to(m)
